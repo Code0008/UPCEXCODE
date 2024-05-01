@@ -1,58 +1,82 @@
 #include <iostream>
-#include <ctime>
 #include <string>
-
+#include <iomanip>
 using namespace std;
+int main();
+unsigned short veces_ejecutada = 0, veces_prestado = 0, veces_devuelto = 0; string nombre_usuario, codigo_empleado;
 
-string capture_time(int newtime){  // esta funcion nos devolvera el tipo de dato string mejor dicho una cadena de texto
-    time_t ahora = time(0); // En esta parte del codigo con la libreria ctime usamos su metodo time_t y en la varibale ahora guardamos la funcion time(0) capturando el timesawp
-    ahora+=newtime; // aca sumamos el valor de timesawp el nuevo valor a calcular para hallar el tiempo
-    string x=ctime(&ahora); // asignamos a la variable x el texto de timeswap que pasamos la direccion de mememoria de la variable ahora pasandola y convirtiendo ese valor en texto
-    return x; //devolvemos la variable x
-}
-void boleta_entrega(string username, string dni, string autor_del_libro, int fechas){ // lo que recibieremos sera el nombre_de_usuario, su documento de identidad, el autor del libro y pasaremos tambien la cantidad de segundos del tiempo que el usuario tomara prestado el libro
-    cout << "Usuario: " << username<< endl;
-    cout << "DNI: " << dni << endl;
-    cout << "Autor: " << autor_del_libro  << endl;
-    if (fechas>0){ //Aca podemos hacer la diferencia entre el tiempo que tomara prestado y tiempo que tomo prestado
-        cout << "Fecha de pedido " << capture_time(0);
-        cout << "Fecha de entrega: " << capture_time(fechas*604800); // si cumple la condicion del if al valor almacenado en fechas se le multiplicara por la cantidad de segundos de una semana para hallar el tiempo que prestara
-    }else{ // si no se cumple la condicion entrara a el else
-    cout << "Fecha de entrega del pedido: " << capture_time(0)<< endl; // llamamos la funcion con el numero 0 para calulcar la fecha actual que se devuelve el prodcuto
-    cout << "Fecha que pediste el libro: " << capture_time(604800*fechas); // aca calculamos hace cuantas semanas pidio el libro
+void estetica(){
+    for(unsigned short x=0; x<20;x++){
+        cout << '-';
     }
 }
-
-int main(){
-    string nombre_de_usuario, documento_de_identidad, titulo_del_libro, direccion_de_contacto,
-    numero_de_contacto; // las variables string almacenaran datos en texto ya que no trataremos con ellos a la hora de trabajar la logica del programa
-    unsigned short eleccion, semanas; // el unsigned short con esto declaramos que las variables eleccion y semanas no puedan recibir valores menores a 0
-
-    cout << "[+] Ingrese nombre de usuario: "<<endl; getline(cin,nombre_de_usuario);
-    cout << "[+] Ingrese su documento de identidad: "<<endl; getline(cin,documento_de_identidad);
-    cout << "[+] Ingrese su direccion de contacto" << endl; getline(cin,direccion_de_contacto);
-    cout << "[+] Ingrese su numero de contacto: " << endl; getline(cin,numero_de_contacto);
-    cout << endl <<"[!] ingrese su seleccion \n[1] para prestar libros\n[2] Para devolver libros"<<endl;cin >> eleccion;
-    switch (eleccion) {
-        case 1:
-            cout << "[!!!] cuantas semanas tomara prestado el libro (limite 3):";cin>>semanas;
-            if(semanas>3 || semanas<0){ cout << "Numero superior al limite o incorrecto saliendo del proceso..."
-            << endl; break;}
-            else{cout << "Ingrese que libro retirara: "; getline(cin, titulo_del_libro);
-            boleta_entrega(nombre_de_usuario, documento_de_identidad, titulo_del_libro,
-                           semanas);break;}
-        case 2:
-            cout << "Ingrese el libro que devolvera  : "; getline(cin, titulo_del_libro);
-            cout << "Ingrse hace cuantas semanas pidio el libro: ";cin>>semanas;
-            if (semanas<=3){boleta_entrega(nombre_de_usuario, documento_de_identidad,
-                                           titulo_del_libro,-semanas);}
-            else{
-                cout << "USTED SE DEMORO{" << semanas-2 <<"} DE MAS PARA ENTREGAR EL LIBRO SE LE PONDRA UNA SANSCION: "
-                << endl;boleta_entrega(nombre_de_usuario, documento_de_identidad,
-                                       titulo_del_libro,-semanas);
-                cout << "La sancion es de 10 soles por semana que no entrego: " << 10*(semanas-2) << endl;
-            }break;
-        default:
-            cout << "Valor incorrecto ingrsado: " << endl; break;
-    }
+void boleta_devolver(string nombre_usuario, string codigo_empleado, string codigo) {
+    int dia, mes, prestado_dia, prestado_mes, sancion_economica = 0;
+    do{
+        do {
+        cout << "\n\t";estetica();cout << "\t[+] Ingrese el dia: ";cin >> dia;cout << endl << "\t";estetica();
+        cout << "\t[+] Ingrese el mes actual: ";cin >> mes;
+        cout << endl << "\t";estetica();cout << "\t[!] Ingrese el dia pidio prestado el libro: ";
+        cin >> prestado_dia;cout << endl << "\t";estetica();
+        cout << "\t[!] Ingrese el mes que presto el libro: ";cin >> prestado_mes;cout << endl << "\t";estetica();
+        }while(dia>30 || prestado_dia>30 || mes>=12 || prestado_mes>=12);
+        if (mes>prestado_mes) { sancion_economica=(30*(mes-prestado_mes)-prestado_dia)-(30-dia);
+            sancion_economica-14>14 ? sancion_economica= sancion_economica*2 : sancion_economica=0 ; }
+    }while(mes<prestado_mes);
+    if (sancion_economica == 0) { cout << "\tEXCELENTE GRACIAS POR DEVOLVER A TIEMPO" << endl; }
+    else {cout << "USTED TIENE UN SANCION DE " << sancion_economica << endl;}
 }
+
+void boleta_prestar(string nombre_usuario, string codigo_empleado, string codigo) {
+    unsigned short dia, mes, prestado;
+    do {
+        cout << "Ingrese el dia: "  << endl; cin >> dia;
+        cout << "Ingrese el mes actual: "<<endl; cin >> mes;
+    }while(dia<0 && dia>31 || mes<0&& mes>12);
+    do {
+        if (prestado>14) {cout << "Cantidad incorrecta ingrese denuevo" << endl;}
+        cout << "Ingrese la cantidad de dias que tomara prestado el libro (Limite 14): " << endl;cin >> prestado;
+    } while(prestado>14);
+        cout << "Usuario " << nombre_usuario << endl << "con el codigo" << codigo_empleado <<
+             endl << " Registro un prestamo de: " << prestado << " dias" << endl << " Se espera recibir el dia: ";
+        dia + prestado < 30 ? prestado = prestado + dia : prestado = (prestado + dia) - 30;cout <<prestado <<" Del mes";
+        dia + prestado < 30 ? mes = mes : mes++;cout << mes;
+}
+bool verif(string codigo){
+    bool ver = true;
+    for(unsigned short x=0; x<codigo.length(); x++){
+        if(isdigit(codigo[x])){ ver=true; continue; }
+        else{ver=false; break;}
+    }
+    if (ver!=true){ return false;}
+    else{return true;}
+}
+void menu() {
+    char seleccion; string codigo_libro_num;
+        do{
+        cout << "Codigo de libro (Ej: 123456): "<< endl; cin>> codigo_libro_num;
+        }while(verif(codigo_libro_num)!=true || codigo_libro_num.length()>=7);
+        cout << "[+] Seleccione prestar(P)/ devolver(D)" << endl; cin >> seleccion;
+        switch (toupper(seleccion)) {
+            case 'D':  boleta_devolver(nombre_usuario, codigo_empleado, codigo_libro_num);veces_devuelto++;break;
+            case 'P':  boleta_prestar(nombre_usuario, codigo_empleado, codigo_libro_num);veces_prestado++; break;
+            case 'E':
+            default:  break;
+        }
+}
+int main() {
+    char continu;
+    cout << "Ingrese su nombre del trabajor(sin espacios): " << endl;getline(cin,nombre_usuario);
+    do{cout << "Ingrese su codigo de usuario: " << endl; cin >> codigo_empleado;}
+    while(verif(codigo_empleado)!=true|| codigo_empleado.length()>=9);
+    do {
+        veces_ejecutada++;
+        menu();
+        cout << endl << "Desea continuar? S/N: "; cin >> continu;
+    } while (toupper(continu) != 'N');
+    cout << "VECES EJECUTADO: " << veces_ejecutada << endl;
+    cout << "VECES DEVUELTO: " << veces_devuelto << endl;
+    cout << "VECES PRESTADO: " << veces_prestado << endl;
+    return 0;
+}
+
