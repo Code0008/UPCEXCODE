@@ -147,94 +147,118 @@ int main() {
 	ordenas_compras(compras, nprovedores);
 }
 ----------------------------------------------------------------
+#include <iostream>
+#include <stdio.h>
+#include "modulo_ralp.h"
+#include <string>
+#include <conio.h>
+using namespace std;
 
-struct direccion_trabajador {
+
+struct direccion {
 	string direccion;
 	string distrito;
 	string provincia;
 };
 
-struct informacion_trabajador {
+int ntrabajadores, promedio = 0;
+struct trabajador {
 	string nombre;
 	int edad;
 	char sexo;
-	direccion_trabajador direc;
+	direccion inforacion_direccion;
 	int venta;
-} trabajadores[100];
+} trabajadores[100]; 
 
 
-void registrar_informacion(int ntrabajadores) {
+
+void registrar_trabajador() {
 	for (int i = 0; i < ntrabajadores; i++) {
-		cout << "Ingrese el nombre de trabajador: "; getline(cin, trabajadores[i].nombre); cin.ignore();
-		cout << "Ingrese edad: "; cin >> trabajadores[i].edad; cin.ignore();
-		cout << "Ingrese sexo: "; cin >> trabajadores[i].sexo; cin.ignore();
-		cout << "Ingrese direccion: "; getline(cin, trabajadores[i].direc.direccion); cin.ignore();
-		cout << "Ingrese distrito: "; getline(cin, trabajadores[i].direc.distrito); cin.ignore();
-		cout << "Ingrese provincia: "; getline(cin, trabajadores[i].direc.provincia); cin.ignore();
-		cout << "Ingrese venta: ";cin>> trabajadores[i].venta; cin.ignore();
+		cout << "Registrar Nombre: " << endl; getline(cin, trabajadores[i].nombre); cin.ignore(); 
+		cout << "Registrar edad: " << endl; cin >> trabajadores[i].edad; cin.ignore();
+		cout << "Registrar sexo: " << endl; cin >> trabajadores[i].sexo; cin.ignore();
+		cout << "Registrar direccion: " << endl; getline(cin, trabajadores[i].inforacion_direccion.direccion);  cin.ignore();
+		cout << "Registrar distrito: " << endl; getline(cin, trabajadores[i].inforacion_direccion.distrito); cin.ignore();
+		cout << "Registrar provincia: " << endl; getline(cin, trabajadores[i].inforacion_direccion.provincia);  cin.ignore();
+		cout << "Registrar venta: " << endl; cin >> trabajadores[i].venta; cin.ignore();
+		promedio += trabajadores[i].venta;
 	}
 }
 
-void venta_promedio(int ntrabajadores) {
-	int prom = 0;
-	for (int i = 0; i < ntrabajadores; i++) {
-		prom += trabajadores[i].venta;
-	}
-	cout << "El promedio es: " << prom / ntrabajadores;
+void venta_promedio() {
+	cout << "El promedio: " << promedio / ntrabajadores << endl;
 }
 
-
-void venta_mayor(int ntrabajadores) {
-	int max_venta = 0, min_venta = 0, indice=0;
+void venta_mayor() {
+	int mayor = 0, indice=0;
 	for (int i = 0; i < ntrabajadores; i++) {
-		if (trabajadores[i].venta > max_venta) {
-			max_venta = trabajadores[i].venta;
-			indice = i;
-		}
-		else if (trabajadores[i].venta < max_venta) {
-			min_venta = trabajadores[i].venta;
-		}
-	}
-	cout << "La mayor venta lo tiene [ " << trabajadores[indice].nombre << " ] Con la direccion {" << trabajadores[indice].direc.direccion
-		<< endl << trabajadores[indice].direc.distrito << endl << trabajadores[indice].direc.provincia << endl;
-}
-
-
-void menor_venta(int ntrabajadores) {
-	int menor_venta = INT_MAX, indice=0;
-	for (int i = 0; i < ntrabajadores; i++) {
-		if (trabajadores[i].venta < menor_venta) {
-			menor_venta = trabajadores[i].venta;
+		if (trabajadores[i].venta > mayor) {
+			mayor = trabajadores[i].venta;
 			indice = i;
 		}
 	}
-	cout << "La menor venta lo tiene [" << trabajadores[indice].nombre << "]" << endl;
+	cout << "EL QUE TIENE LA MAYOR VENTA ES: " << trabajadores[indice].nombre; 
 }
 
-void ordenar_edad(int ntrabajadores) {
+void venta_menor() {
+	int menor = INT_MAX, indice = 0;
+	for (int i = 0; i < ntrabajadores; i++) {
+		if (trabajadores[i].venta < menor) {
+			menor = trabajadores[i].venta;
+			indice = i;
+		}
+	}
+	cout << "EL QUE TIENE LA menor VENTA ES: " << trabajadores[indice].nombre;
+}
+
+void ordenar_edad() {
 	int* edades = new int[ntrabajadores];
+
 	for (int i = 0; i < ntrabajadores; i++) {
 		edades[i] = trabajadores[i].edad;
 	}
-	for (int i = 1; i < ntrabajadores; i++) {
-		int key = edades[i];
-		int j = i - 1;
 
-		while (j >= 0 && edades[i] > key) {
-			edades[j + 1] = edades[j];
-			j = j - 1;
-		}
-		edades[j + 1] = key;
-	}
+	int current = 0;
+	int j;
 	for (int i = 0; i < ntrabajadores; i++) {
-		cout << "[" << edades[i] << "]";
+		current = edades[i];
+		j = i - 1;
+
+		while (j >= 0 && edades[j] > current) {
+			edades[j + 1] = edades[j];
+			j -= 1;
+		}
+
+		edades[j + 1] = current;
+	}
+
+	for (int i = ntrabajadores-1; i > 0; i--) {
+		cout << " [" << edades[i] << "] ";
 	}
 }
 
+void mostrar_datos() {
+	cout << endl;
+	for (int i = 0; i < ntrabajadores; i++) {
+		cout << "-----TRABAJADOR: "<<i+1<< "-----"<< endl;
+		cout << "Nombre: "<< trabajadores[i].nombre << endl;
+		cout << "Edad: " << trabajadores[i].edad << endl;
+		cout << "Sexo: " << trabajadores[i].sexo << endl;
+		cout << "Direccion: " << trabajadores[i].inforacion_direccion.direccion << endl;
+		cout << "distrito: " << trabajadores[i].inforacion_direccion.distrito << endl;
+		cout << "provincia: " << trabajadores[i].inforacion_direccion.provincia << endl;
+		cout << "Venta: " << trabajadores[i].venta << endl;
+	}
+}
+
+
 int main() {
-	registrar_informacion(2);
-	venta_promedio(2);
-	venta_mayor(2);
-	menor_venta(2);
-	ordenar_edad(2);
+	cout << "Ingrese el numero de trabajadores: "; cin >> ntrabajadores; cin.ignore(); cout << endl;
+	registrar_trabajador();cout << endl;
+	venta_promedio();cout << endl;
+	venta_mayor();cout << endl;
+	venta_menor(); cout << endl;
+	ordenar_edad();cout << endl;
+	mostrar_datos();
+	return 0;
 }
