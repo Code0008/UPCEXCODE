@@ -82,10 +82,10 @@ extern bool respuesta_continuar() {
 	else { return false; }
 }
 
-extern int codigo_aleatorio() {
+extern int codigo_aleatorio(int inicio, int fin) {
 	int gen;
         srand(time(NULL);
-        gen = 100000 + rand()%(999999+1-100000);
+        gen = inicio + rand()%(fin+1-inicio);
         return gen;
 }
 
