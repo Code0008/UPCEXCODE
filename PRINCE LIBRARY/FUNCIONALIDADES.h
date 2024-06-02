@@ -3,6 +3,7 @@
 #include <string>
 #include <stdio.h>
 #include <conio.h>
+#include <time.h>
 #include "ESTRUCTURAS.h"
 using namespace std;
 
@@ -79,6 +80,13 @@ extern bool respuesta_continuar() {
 	cin >> respuesta; respuesta=toupper(respuesta);
 	if (respuesta == 'Y') { return true; }
 	else { return false; }
+}
+
+extern int codigo_aleatorio() {
+	int gen;
+        srand(time(NULL);
+        gen = 100000 + rand()%(999999+1-100000);
+        return gen;
 }
 
 /*________________________________________*/
