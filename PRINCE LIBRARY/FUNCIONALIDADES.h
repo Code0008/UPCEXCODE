@@ -19,8 +19,7 @@ static bool verif_string(string texto) {
 }
 
 static bool verif_telefono(string telefono) {
-	cout << telefono.length();
-	if (telefono.length() <10) {
+	if (telefono.length() <10 && telefono.length()>1) {
 		bool verif=false;
 		for (int i = 0; i < 9; i++) {
 			if (telefono[i] == '+') { return false; }
@@ -32,6 +31,7 @@ static bool verif_telefono(string telefono) {
 }
 
 static bool verif_entero(string verificar) {
+	if (verificar.length() == 0) { return false; }
 		bool verif = false;
 		for (int i = 0; i < verificar.length(); i++) {
 			if (isspace(verificar[i]) || !isprint(verificar[i])) { return false; }
@@ -52,7 +52,6 @@ extern void estetica(int tamano = 20, char caracter = '_') {
 /*____________________________________*/
 
 
-
 /*CREACION DE ARREGLOS DE INVENTARIO*/
 
 LIBRO* inventario = new LIBRO[100];
@@ -65,6 +64,7 @@ LIBRO inventario_disponible[3] = {
 /*___________________________________*/
 /*CRACION DE ARREGLOS DE USUARIOS*/
 USUARIO* usuarios = new USUARIO[100];
+
 /*____________________________________*/
 
 /*FUNCION COMPLEMENTARIA CAPTURE TIME*/
@@ -87,8 +87,7 @@ extern void obtener_informacion_usuario(int id_usuario) {
 	usuarios[id_usuario].hora_operacion = capture_time();
 	usuarios[id_usuario].userID = id_usuario;
 	while (true) {
-		cout << "\tIngrese nombre del usuario: ";
-		getline(cin, usuarios[id_usuario].NOMBRE_APELLIDO);
+		cout << "\tIngrese nombre del usuario: "; getline(cin, usuarios[id_usuario].NOMBRE_APELLIDO);
 		if (verif_string(usuarios[id_usuario].NOMBRE_APELLIDO)) { cout << "\t [!]INGRESE BIEN EL NOMBRE\n";}
 		else {break; }
 	}
@@ -111,9 +110,9 @@ extern void obtener_informacion_usuario(int id_usuario) {
 		if (verif_string(usuarios[id_usuario].direccion.DISTRITO)) { cout << "\t[!] Ingrese bien los datos!\n"; }
 		else { break; }
 	}
-	cout << "\tIngrese su direccion: "; cin.ignore(); getline(cin, usuarios[id_usuario].direccion.DIRECCION);
+	cout << "\tIngrese su direccion: ";  getline(cin, usuarios[id_usuario].direccion.DIRECCION);
 	while (true) {
-		cout << "\tIngrese CASA(1)/DEPARTAMENTO(2): ";  cin>> ingreso_jugar;
+		cout << "\tIngrese CASA(1)/DEPARTAMENTO(2): ";cin >> ingreso_jugar;
 		if (verif_entero(ingreso_jugar)) { break; }
 		else { cout << "\t[!]Ingrese un valor correcto!\n "; }
 	}
@@ -123,13 +122,13 @@ extern void obtener_informacion_usuario(int id_usuario) {
 		cout << "\tIngrese su numero de celular (SIN PREFIJO): "; cin.ignore();getline(cin, usuarios[id_usuario].CELULAR);
 		if (verif_telefono(usuarios[id_usuario].CELULAR) == false) { cout << "\t[!] Ingreso de forma erronea el numero telefnoico\n"; }
 		else {  break; }
-
 	}
 }
 
 /*FUNCION COMPLEMENTARIA RECIBIR RESPUESTA*/
 extern bool respuesta_continuar() {
 	char respuesta;
+	cout << endl;
 	estetica(20, '!');
 	cout << "\tdesea hacer otra operacion?: Y/N " << endl;
 	cin >> respuesta; respuesta=toupper(respuesta);
@@ -146,3 +145,19 @@ extern int codigo_aleatorio(int inicio, int fin) {
 }
 /*_______________________________________*/
 
+extern void see_data(int contador) {
+	for (int i = 0; i < contador; i++) {
+		cout << "\t" << usuarios[i].userID << endl;
+		cout << "\t" << usuarios[i].DNI << endl;
+		cout << "\t" << usuarios[i].NOMBRE_APELLIDO<< endl;
+		cout << "\t" << usuarios[i].EDAD<< endl;
+		cout << "\t" << usuarios[i].SEXO<< endl;
+		cout << "\t" << usuarios[i].direccion.CASA_DEPARTAMENTO << endl;
+		cout << "\t" << usuarios[i].direccion.DIRECCION<< endl;
+		cout << "\t" << usuarios[i].direccion.DISTRITO<< endl;
+		cout << "\t" << usuarios[i].direccion.PROVINCIA << endl;
+		cout << "\t" << usuarios[i].CELULAR<< endl;
+		cout << "\t" << usuarios[i].hora_operacion << endl;
+	}
+
+}
