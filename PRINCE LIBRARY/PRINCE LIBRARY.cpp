@@ -1,6 +1,5 @@
 // PROPUESTA 008 PARA SISSOFT-UPC
-// 02/06/2024 18:00 INCIO
-// 03/06/2024 19:10 ACTUALIZANDO
+// 04/06/2024  10:37ACTUALIZANDO
 
 #include <iostream>
 #include <string>
@@ -11,14 +10,39 @@
 //#include "TESTS.h"
 using namespace std;
 int main() {
+	int contador_usuario = 0;
+	int seleccion = 0;
 	while (true) {
-		int contador_usuario = 0;
 		menu_login();
 		cout << "\t"; estetica(30, '*');
 		cout << "\t\t\t" << capture_time() << endl;
 		cout << "\t"; estetica(30, '*');
 		obtener_informacion_usuario(contador_usuario);
+		contador_usuario++;
+		system("cls");
+
+		menu_principal();
+		while (true) {
+			seleccion = 0;
+			cout << "[+] INGRESE SELECCION: ";
+			cin >> seleccion;
+			if (seleccion == 1 || seleccion == 2 || seleccion == 3) { break; }
+			else { cout << "\t[!]Ingrese una seleccion valida\n";   continue; }
+		}
+		switch (seleccion)
+		{
+		case 1:
+			system("cls");
+			menu_prestamo();
+			break;
+		default:
+			break;
+		}
+
 		if (respuesta_continuar() != true) { break; }
+
+		cin.ignore();
 	}
+	see_data(2);
 
 }
