@@ -8,17 +8,19 @@ using namespace std;
 struct direccion_usuario {
 	string DIRECCION;
 	string DISTRITO;
-	string PROVINCIA;
+	string PROVINCIA="LIMA";
 	string CASA_DEPARTAMENTO;
 };
 
 struct USUARIO {
+	int userID;
 	string DNI;
-	string nombre_apellido;
+	string NOMBRE_APELLIDO;
 	int EDAD;
 	char SEXO;
 	direccion_usuario direccion;
-	string celular;
+	string CELULAR;
+	string hora_operacion;
 };
 
 
@@ -27,3 +29,4 @@ struct LIBRO {
 	string tipo_libro;
 	string titutlo_libro;
 };
+
