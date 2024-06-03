@@ -19,25 +19,26 @@ static bool verif_string(string texto) {
 }
 
 static bool verif_telefono(string telefono) {
-	if (telefono.length() >= 9) {
-		for (int i = 0; i < telefono.length(); i++) {
+	cout << telefono.length();
+	if (telefono.length() <10) {
+		bool verif=false;
+		for (int i = 0; i < 9; i++) {
 			if (telefono[i] == '+') { return false; }
-			else { continue; }
+			if (isdigit(telefono[i])) { verif = true; }
 		}
-		return true;
+		return verif;
 	}
 	else { return false; }
 }
+
 static bool verif_entero(string verificar) {
-	if (verificar.length() <= 2) {
 		bool verif = false;
 		for (int i = 0; i < verificar.length(); i++) {
+			if (isspace(verificar[i]) || !isprint(verificar[i])) { return false; }
 			if (isdigit(verificar[i])) { verif = true; }
 			else { return false; }
 		}
 		return verif;
-	}else { return false; }
-
 
 }
 /*________________________________________*/
@@ -82,35 +83,37 @@ extern string capture_time() {
 /*____________________________________*/
 
 extern void obtener_informacion_usuario(int id_usuario) {
-	string  ingreso_jugar;
+	string ingreso_jugar;
 	usuarios[id_usuario].hora_operacion = capture_time();
 	usuarios[id_usuario].userID = id_usuario;
 	while (true) {
-		cout << "\tIngrese nombre del usuario: ";cin.ignore(); getline(cin, usuarios[id_usuario].NOMBRE_APELLIDO);
+		cout << "\tIngrese nombre del usuario: ";
+		getline(cin, usuarios[id_usuario].NOMBRE_APELLIDO);
 		if (verif_string(usuarios[id_usuario].NOMBRE_APELLIDO)) { cout << "\t [!]INGRESE BIEN EL NOMBRE\n";}
-		else { break; }
+		else {break; }
 	}
 
 	while (true){
-		cout << "\tIngrese edad del usuario: ";cin.ignore(); cin >> ingreso_jugar;
-		if (verif_entero(ingreso_jugar)) { usuarios[id_usuario].EDAD = stoi(ingreso_jugar);break; }
-		else { cout << "\t[!] Ingrese bien su edad!\n"; }
+		cout << "\tIngrese edad del usuario: ";  cin >> ingreso_jugar;
+		if (verif_entero(ingreso_jugar)) { usuarios[id_usuario].EDAD = stoi(ingreso_jugar); break; }
+		else { cout << "\t[!] Ingrese bien su edad!\n"; } 
 	}
 	while (true) {
-		cout << "\tSeleccion de sexo Masculino(1)/Femenino(2)/Helicoptero apache(3): ";cin.ignore(); cin >> ingreso_jugar;
+		cout << "\tSeleccion de sexo Masculino(1)/Femenino(2)/Helicoptero apache(3): "; cin >> ingreso_jugar;
 		if (verif_entero(ingreso_jugar)) { break; }
 		else { cout << "\t[!]Ingrese un valor correcto!\n "; }
 	}
 	switch (stoi(ingreso_jugar))
 	{case 1: usuarios[id_usuario].SEXO = 'M'; break; case 2: usuarios[id_usuario].SEXO = 'F'; break; case 3: usuarios[id_usuario].SEXO = 'N'; break; default:break;}
+
 	while (true) {
-		cout << "\tIngrese su distrito: "; cin.ignore(); getline(cin, usuarios[id_usuario].direccion.DISTRITO);
+		cout << "\tIngrese su distrito: "; cin.ignore();  getline(cin, usuarios[id_usuario].direccion.DISTRITO);
 		if (verif_string(usuarios[id_usuario].direccion.DISTRITO)) { cout << "\t[!] Ingrese bien los datos!\n"; }
 		else { break; }
 	}
 	cout << "\tIngrese su direccion: "; cin.ignore(); getline(cin, usuarios[id_usuario].direccion.DIRECCION);
 	while (true) {
-		cout << "\tIngrese CASA(1)/DEPARTAMENTO(2): ";  cin >> ingreso_jugar;
+		cout << "\tIngrese CASA(1)/DEPARTAMENTO(2): ";  cin>> ingreso_jugar;
 		if (verif_entero(ingreso_jugar)) { break; }
 		else { cout << "\t[!]Ingrese un valor correcto!\n "; }
 	}
@@ -119,7 +122,8 @@ extern void obtener_informacion_usuario(int id_usuario) {
 	while (true) {
 		cout << "\tIngrese su numero de celular (SIN PREFIJO): "; cin.ignore();getline(cin, usuarios[id_usuario].CELULAR);
 		if (verif_telefono(usuarios[id_usuario].CELULAR) == false) { cout << "\t[!] Ingreso de forma erronea el numero telefnoico\n"; }
-		else { break; }
+		else {  break; }
+
 	}
 }
 
