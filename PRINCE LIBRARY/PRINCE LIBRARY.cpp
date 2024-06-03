@@ -1,6 +1,6 @@
 // PROPUESTA 008 PARA SISSOFT-UPC
-// 01/06/2024 22:08 INCIO
-// 02/06/2024 00:16 ACTUALIZANDO
+// 02/06/2024 18:00 INCIO
+// 03/06/2024 19:10 ACTUALIZANDO
 
 #include <iostream>
 #include <string>
@@ -12,11 +12,13 @@
 using namespace std;
 int main() {
 	while (true) {
-		int contador_usuario=0;
-		menu_principal();
-		cout << "\t" << capture_time();
+		int contador_usuario = 0;
+		menu_login();
+		cout << "\t"; estetica(30, '*');
+		cout << "\t\t\t" << capture_time() << endl;
+		cout << "\t"; estetica(30, '*');
 		obtener_informacion_usuario(contador_usuario);
-		if (respuesta_continuar() != true) { break;}
+		if (respuesta_continuar() != true) { break; }
 	}
 
 }
