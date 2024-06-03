@@ -4,8 +4,53 @@
 #include <stdio.h>
 #include <conio.h>
 #include <time.h>
-#include "ESTRUCTURAS.h"
+#include "STRUCTURAS.h"
+#include <string>
 using namespace std;
+
+
+/*________________________________________*/
+
+static bool verif_string(string texto) {
+	for (int i = 0; i < texto.length(); i++) {
+		if (isdigit(texto[i])) { return true; }
+		else { continue; }
+	} return false;
+}
+
+static bool verif_telefono(string telefono) {
+	if (telefono.length() >= 9) {
+		for (int i = 0; i < telefono.length(); i++) {
+			if (telefono[i] == '+') { return false; }
+			else { continue; }
+		}
+		return true;
+	}
+	else { return false; }
+}
+static bool verif_entero(string verificar) {
+	if (verificar.length() <= 2) {
+		bool verif = false;
+		for (int i = 0; i < verificar.length(); i++) {
+			if (isdigit(verificar[i])) { verif = true; }
+			else { return false; }
+		}
+		return verif;
+	}else { return false; }
+
+
+}
+/*________________________________________*/
+/*FUNCION DE ESTETICA DEL PROGRAMA*/
+extern void estetica(int tamano = 20, char caracter = '_') {
+	cout << "\t";
+	for (int i = 0; i < tamano; i++) {
+		cout << caracter;
+	}cout << endl;
+}
+/*____________________________________*/
+
+
 
 /*CREACION DE ARREGLOS DE INVENTARIO*/
 
@@ -20,20 +65,10 @@ LIBRO inventario_disponible[3] = {
 /*CRACION DE ARREGLOS DE USUARIOS*/
 USUARIO* usuarios = new USUARIO[100];
 /*____________________________________*/
-/*FUNCION DE ESTETICA DEL PROGRAMA*/
-static void estetica(int tamaño=20, char caracter='_') {
-	cout << "\t";
-	for (int i = 0; i < tamaño; i++) {
-		cout << caracter;
-	}cout << endl;
-}
-/*____________________________________*/
 
 /*FUNCION COMPLEMENTARIA CAPTURE TIME*/
 extern string capture_time() {
 	string tiempo_capturado;
-	cout << endl;
-	estetica(24, '*');
 	tm tiempo;
 	time_t timestap;
 	time(&timestap);
@@ -47,31 +82,47 @@ extern string capture_time() {
 /*____________________________________*/
 
 extern void obtener_informacion_usuario(int id_usuario) {
-	int selection;
+	string  ingreso_jugar;
 	usuarios[id_usuario].hora_operacion = capture_time();
 	usuarios[id_usuario].userID = id_usuario;
-	cout << "\tIngrese nombre del usuario: ";
-	cin.ignore(); getline(cin, usuarios[id_usuario].NOMBRE_APELLIDO);
-	cout << "\tIngrese edad del usuario: ";
-	cin.ignore(); cin >> usuarios[id_usuario].EDAD;
-	cout << "\tSeleccion de sexo Masculino(1)/Femenino(2)/Helicoptero apache(3): ";
-	cin.ignore(); cin >> selection;
-	switch (selection)
-	{
-	case 1: usuarios[id_usuario].SEXO = 'M'; break; case 2: usuarios[id_usuario].SEXO = 'F'; break; case 3: usuarios[id_usuario].SEXO = 'N'; break; default:break;
-	}selection = 0;
-	cout << "\tIngrese su distrito: "; cin.ignore(); getline(cin, usuarios[id_usuario].direccion.DISTRITO);
-	cout << "\tIngrese su direccion: "; cin.ignore(); getline(cin, usuarios[id_usuario].direccion.DIRECCION);
-	cout << "\tIngrese CASA(1)/DEPARTAMENTO(2): ";  cin >> selection;
-	switch (selection)
-	{
-	case 1:  usuarios[id_usuario].direccion.CASA_DEPARTAMENTO = "CASA"; break; case 2:  usuarios[id_usuario].direccion.CASA_DEPARTAMENTO = "DEPARTAMENTO"; break; default:break;
+	while (true) {
+		cout << "\tIngrese nombre del usuario: ";cin.ignore(); getline(cin, usuarios[id_usuario].NOMBRE_APELLIDO);
+		if (verif_string(usuarios[id_usuario].NOMBRE_APELLIDO)) { cout << "\t [!]INGRESE BIEN EL NOMBRE\n";}
+		else { break; }
 	}
-	cout << "\tIngrese su numero de celular (SIN PREFIJO): "; cin.ignore();
-	getline(cin, usuarios[id_usuario].CELULAR);
+
+	while (true){
+		cout << "\tIngrese edad del usuario: ";cin.ignore(); cin >> ingreso_jugar;
+		if (verif_entero(ingreso_jugar)) { usuarios[id_usuario].EDAD = stoi(ingreso_jugar);break; }
+		else { cout << "\t[!] Ingrese bien su edad!\n"; }
+	}
+	while (true) {
+		cout << "\tSeleccion de sexo Masculino(1)/Femenino(2)/Helicoptero apache(3): ";cin.ignore(); cin >> ingreso_jugar;
+		if (verif_entero(ingreso_jugar)) { break; }
+		else { cout << "\t[!]Ingrese un valor correcto!\n "; }
+	}
+	switch (stoi(ingreso_jugar))
+	{case 1: usuarios[id_usuario].SEXO = 'M'; break; case 2: usuarios[id_usuario].SEXO = 'F'; break; case 3: usuarios[id_usuario].SEXO = 'N'; break; default:break;}
+	while (true) {
+		cout << "\tIngrese su distrito: "; cin.ignore(); getline(cin, usuarios[id_usuario].direccion.DISTRITO);
+		if (verif_string(usuarios[id_usuario].direccion.DISTRITO)) { cout << "\t[!] Ingrese bien los datos!\n"; }
+		else { break; }
+	}
+	cout << "\tIngrese su direccion: "; cin.ignore(); getline(cin, usuarios[id_usuario].direccion.DIRECCION);
+	while (true) {
+		cout << "\tIngrese CASA(1)/DEPARTAMENTO(2): ";  cin >> ingreso_jugar;
+		if (verif_entero(ingreso_jugar)) { break; }
+		else { cout << "\t[!]Ingrese un valor correcto!\n "; }
+	}
+	switch (stoi(ingreso_jugar))
+	{case 1:  usuarios[id_usuario].direccion.CASA_DEPARTAMENTO = "CASA"; break; case 2:  usuarios[id_usuario].direccion.CASA_DEPARTAMENTO = "DEPARTAMENTO"; break; default:break;	}
+	while (true) {
+		cout << "\tIngrese su numero de celular (SIN PREFIJO): "; cin.ignore();getline(cin, usuarios[id_usuario].CELULAR);
+		if (verif_telefono(usuarios[id_usuario].CELULAR) == false) { cout << "\t[!] Ingreso de forma erronea el numero telefnoico\n"; }
+		else { break; }
+	}
 }
 
-/*_______________________________________*/
 /*FUNCION COMPLEMENTARIA RECIBIR RESPUESTA*/
 extern bool respuesta_continuar() {
 	char respuesta;
@@ -81,15 +132,13 @@ extern bool respuesta_continuar() {
 	if (respuesta == 'Y') { return true; }
 	else { return false; }
 }
-
+/*_______________________________________*/
+/*FUNCION COMPLEMENTARIA GENERAR CODIGO ALEATORIO*/
 extern int codigo_aleatorio(int inicio, int fin) {
 	int gen;
-        srand(time(NULL);
-        gen = inicio + rand()%(fin+1-inicio);
-        return gen;
+	srand(time(NULL));
+    gen = inicio + rand()%(fin+1-inicio);
+    return gen;
 }
+/*_______________________________________*/
 
-/*________________________________________*/
-/*________________________________________*/
-
-/*________________________________________*/
