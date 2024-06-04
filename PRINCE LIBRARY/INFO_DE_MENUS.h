@@ -1,11 +1,14 @@
 #pragma once
 #include <iostream>
 #include "FUNCIONALIDADES.h"
+#include "COLORAMA.h"
 using namespace std;
 
 
 extern void menu_login() {
-        cout <<     
+    cout << BG_YELLOW<< "\t"; estetica(88, ' ');
+    cout <<
+        BG_YELLOW << MAGENTA <<
         "\t\t$$$$$$$\\ $$$$$$\\$$$$$$$$\\$$\\   $$\\$$\\    $$\\$$$$$$$$\\$$\\   $$\\$$$$$$\\$$$$$$$\\  $$$$$$\\  \n"
         "\t\t$$  __$$\\\\_$$  _$$  _____$$$\\  $$ $$ |   $$ $$  _____$$$\\  $$ \\_$$  _$$  __$$\\$$  __$$\\ \n"
         "\t\t$$ |  $$ | $$ | $$ |     $$$$\\ $$ $$ |   $$ $$ |     $$$$\\ $$ | $$ | $$ |  $$ $$ /  $$ |\n"
@@ -13,12 +16,11 @@ extern void menu_login() {
         "\t\t$$  __$$\\  $$ | $$  __|  $$ \\$$$$ |\\$$\\$$  /$$  __|  $$ \\$$$$ | $$ | $$ |  $$ $$ |  $$ |\n"
         "\t\t$$ |  $$ | $$ | $$ |     $$ |\\$$$ | \\$$$  / $$ |     $$ |\\$$$ | $$ | $$ |  $$ $$ |  $$ |\n"
         "\t\t$$$$$$$  $$$$$$\\$$$$$$$$\\$$ | \\$$ |  \\$  /  $$$$$$$$\\$$ | \\$$ $$$$$$\\$$$$$$$  |$$$$$$  |\n"
-        "\t\t\\_______/\\______\\________\\__|  \\__|   \\_/   \\________\\__|  \\__\\______\\_______/ \\______/ \n"
-        "                                                                                        " << endl;
-        estetica(100, '_');
-        cout << "\t\t\t\t\t-INGRESE INFORMACION BASICA DE USUARIO-\t\t\t" << endl;
-        estetica(100, '-');
-
+        "\t\t\\_______/\\______\\________\\__|  \\__|   \\_/   \\________\\__|  \\__\\______\\_______/ \\______/ \n" << RESET;
+    cout << BG_YELLOW << "\t"; estetica(88, ' ');
+    cout << BG_GREEN<< BLUE;  estetica(100, '_'); cout << RESET;
+    cout << BG_GREEN << BLACK <<"\t\t\t\t\t-INGRESE INFORMACION BASICA DE USUARIO-\t\t\t" <<RESET<< endl;
+    cout << BG_GREEN<< BLUE;  estetica(100, '-'); cout << RESET;
 }
 
 
@@ -99,8 +101,5 @@ extern void menu_devulocion() {
 
 
 }
-
-
-
 
 
