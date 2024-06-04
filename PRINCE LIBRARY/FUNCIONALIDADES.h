@@ -5,6 +5,7 @@
 #include <conio.h>
 #include <time.h>
 #include "STRUCTURAS.h"
+#include "COLORAMA.h"
 #include <string>
 using namespace std;
 
@@ -22,8 +23,8 @@ static bool verif_telefono(string telefono) {
 	if (telefono.length() <10 && telefono.length()>1) {
 		bool verif=false;
 		for (int i = 0; i < 9; i++) {
-			if (telefono[i] == '+') { return false; }
 			if (isdigit(telefono[i])) { verif = true; }
+			if (isdigit(telefono[i]) == false || telefono[i] == '+') { return false; }
 		}
 		return verif;
 	}
@@ -87,41 +88,38 @@ extern void obtener_informacion_usuario(int id_usuario) {
 	usuarios[id_usuario].hora_operacion = capture_time();
 	usuarios[id_usuario].userID = id_usuario;
 	while (true) {
-		cout << "\tIngrese nombre del usuario: "; getline(cin, usuarios[id_usuario].NOMBRE_APELLIDO);
-		if (verif_string(usuarios[id_usuario].NOMBRE_APELLIDO)) { cout << "\t [!]INGRESE BIEN EL NOMBRE\n";}
-		else {break; }
+		cout << LGREEN <<"\t[+]Ingrese nombre del usuario: "<<RESET; getline(cin, usuarios[id_usuario].NOMBRE_APELLIDO);
+		if (verif_string(usuarios[id_usuario].NOMBRE_APELLIDO)) { cout <<RED<<"\t[!]"<<RESET <<ORANGE<<"INGRESE BIEN EL NOMBRE\n"<<RESET;}else {break; }
 	}
-
 	while (true){
-		cout << "\tIngrese edad del usuario: ";  cin >> ingreso_jugar;
+		cout << LGREEN<<"\t[+]Ingrese edad del usuario: "<<RESET;  cin >> ingreso_jugar;
 		if (verif_entero(ingreso_jugar)) { usuarios[id_usuario].EDAD = stoi(ingreso_jugar); break; }
-		else { cout << "\t[!] Ingrese bien su edad!\n"; } 
+		else { cout << RED <<"\t[!]"<<RESET <<ORANGE<<" Ingrese bien su edad!\n"<<RESET; } 
 	}
 	while (true) {
-		cout << "\tSeleccion de sexo Masculino(1)/Femenino(2)/Helicoptero apache(3): "; cin >> ingreso_jugar;
+		cout<< LGREEN << "\t[+]Seleccion de sexo:\n\t->(1)Masculino\n\t->(2)Femenino\n\t->(3)Helicoptero apache\n--> "<< RESET; cin >> ingreso_jugar;
 		if (verif_entero(ingreso_jugar)) { break; }
-		else { cout << "\t[!]Ingrese un valor correcto!\n "; }
+		else { cout << RED <<"\t[!]" << RESET<< ORANGE <<"Ingrese un valor correcto!\n "<< RESET; }
 	}
 	switch (stoi(ingreso_jugar))
 	{case 1: usuarios[id_usuario].SEXO = 'M'; break; case 2: usuarios[id_usuario].SEXO = 'F'; break; case 3: usuarios[id_usuario].SEXO = 'N'; break; default:break;}
-
 	while (true) {
-		cout << "\tIngrese su distrito: "; cin.ignore();  getline(cin, usuarios[id_usuario].direccion.DISTRITO);
-		if (verif_string(usuarios[id_usuario].direccion.DISTRITO)) { cout << "\t[!] Ingrese bien los datos!\n"; }
+		cout << LGREEN<<"\t[+]Ingrese su distrito: "<<RESET; cin.ignore();  getline(cin, usuarios[id_usuario].direccion.DISTRITO);
+		if (verif_string(usuarios[id_usuario].direccion.DISTRITO)) { cout << RED<<"\t[!]" << RESET<<ORANGE <<"Ingrese bien los datos!\n"<< RESET; }
 		else { break; }
 	}
-	cout << "\tIngrese su direccion: ";  getline(cin, usuarios[id_usuario].direccion.DIRECCION);
+	cout << LGREEN<<"\t[+]Ingrese su direccion: "<< RESET;  getline(cin, usuarios[id_usuario].direccion.DIRECCION);
 	while (true) {
-		cout << "\tIngrese CASA(1)/DEPARTAMENTO(2): ";cin >> ingreso_jugar;
-		if (verif_entero(ingreso_jugar)) { break; }
-		else { cout << "\t[!]Ingrese un valor correcto!\n "; }
+		cout << LGREEN<<"\t[+]Seleccione:\n\t-->(1)Casa\n\t-->(2)Departamento\n "<<RESET;cin >> ingreso_jugar;
+		if (verif_entero(ingreso_jugar)) {if(stoi(ingreso_jugar)<3 && stoi(ingreso_jugar)>0) break; }
+		else { cout << RED<<"\t[!]" << RESET<< ORANGE<<"Ingrese un valor correcto!\n "<< RESET; }
 	}
 	switch (stoi(ingreso_jugar))
 	{case 1:  usuarios[id_usuario].direccion.CASA_DEPARTAMENTO = "CASA"; break; case 2:  usuarios[id_usuario].direccion.CASA_DEPARTAMENTO = "DEPARTAMENTO"; break; default:break;	}
 	while (true) {
-		cout << "\tIngrese su numero de celular (SIN PREFIJO): "; cin.ignore();getline(cin, usuarios[id_usuario].CELULAR);
-		if (verif_telefono(usuarios[id_usuario].CELULAR) == false) { cout << "\t[!] Ingreso de forma erronea el numero telefnoico\n"; }
-		else {  break; }
+		cout << LGREEN << "\t[+]Ingrese su numero de celular (SIN PREFIJO): " << RESET; cin.ignore();  cin>> ingreso_jugar;
+		if (verif_telefono(ingreso_jugar) == false) { ingreso_jugar = " "; cout << RED << "\t[!]" << RESET << ORANGE << " Ingreso de forma erronea el numero telefnoico\n" << RESET; }
+		else { usuarios[id_usuario].CELULAR=ingreso_jugar; break; }
 	}
 }
 
@@ -129,8 +127,8 @@ extern void obtener_informacion_usuario(int id_usuario) {
 extern bool respuesta_continuar() {
 	char respuesta;
 	cout << endl;
-	estetica(20, '!');
-	cout << "\tdesea hacer otra operacion?: Y/N " << endl;
+	cout << RED; estetica(20, '!'); cout  << RESET;
+	cout << LBLUE<<"\t[!]desea hacer otra operacion?:<<"<<RESET << RED" Y/N " << RESET<< endl;
 	cin >> respuesta; respuesta=toupper(respuesta);
 	if (respuesta == 'Y') { return true; }
 	else { return false; }
@@ -159,5 +157,4 @@ extern void see_data(int contador) {
 		cout << "\t" << usuarios[i].CELULAR<< endl;
 		cout << "\t" << usuarios[i].hora_operacion << endl;
 	}
-
 }
