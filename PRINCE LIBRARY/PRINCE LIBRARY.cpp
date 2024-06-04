@@ -1,5 +1,3 @@
-// PROPUESTA 008 PARA SISSOFT-UPC
-// 04/06/2024  10:37ACTUALIZANDO
 
 #include <iostream>
 #include <string>
@@ -8,8 +6,10 @@
 #include "INFO_DE_MENUS.h"
 #include "FUNCIONALIDADES.h"
 //#include "TESTS.h"
+#include "COLORAMA.h"
 using namespace std;
 int main() {
+	RESET;
 	int contador_usuario = 0;
 	int seleccion = 0;
 	while (true) {
@@ -44,5 +44,7 @@ int main() {
 		cin.ignore();
 	}
 	see_data(2);
+	RESET;
 
 }
+
