@@ -7,50 +7,9 @@
 #include "STRUCTURAS.h"
 #include "COLORAMA.h"
 #include <string>
+#include <cctype>
+
 using namespace std;
-
-
-/*________________________________________*/
-
-static bool verif_string(string texto) {
-	for (int i = 0; i < texto.length(); i++) {
-		if (isdigit(texto[i])) { return true; }
-		else { continue; }
-	} return false;
-}
-
-static bool verif_telefono(string telefono) {
-	if (telefono.length() <10 && telefono.length()>1) {
-		bool verif=false;
-		for (int i = 0; i < 9; i++) {
-			if (isdigit(telefono[i])) { verif = true; }
-			if (isdigit(telefono[i]) == false || telefono[i] == '+') { return false; }
-		}
-		return verif;
-	}
-	else { return false; }
-}
-
-static bool verif_entero(string verificar) {
-	if (verificar.length() == 0) { return false; }
-		bool verif = false;
-		for (int i = 0; i < verificar.length(); i++) {
-			if (isspace(verificar[i]) || !isprint(verificar[i])) { return false; }
-			if (isdigit(verificar[i])) { verif = true; }
-			else { return false; }
-		}
-		return verif;
-
-}
-/*________________________________________*/
-/*FUNCION DE ESTETICA DEL PROGRAMA*/
-extern void estetica(int tamano = 20, char caracter = '_') {
-	cout << "\t";
-	for (int i = 0; i < tamano; i++) {
-		cout << caracter;
-	}cout << endl;
-}
-/*____________________________________*/
 
 
 /*CREACION DE ARREGLOS DE INVENTARIO*/
@@ -66,10 +25,87 @@ LIBRO inventario_disponible[3] = {
 /*CRACION DE ARREGLOS DE USUARIOS*/
 USUARIO* usuarios = new USUARIO[100];
 
+bool verif_string(string texto);
+bool verif_dni(string dni);
+bool verif_telefono(string telefono);
+bool verif_entero(string entero);
+
+
+/*________________________________________*/
+
+static bool verif_dni(string dni) {
+	if (dni.length() == 8) {
+		if (verif_entero(dni)) {
+			return true;
+		}else { return false;}
+	
+	}else { return false; }
+}
+
+static bool verif_codigo_libro(string codigo_libro) {
+	int n = sizeof(inventario_disponible) / sizeof(inventario_disponible[0]);
+	if (verif_entero(codigo_libro)) {
+		if (codigo_libro.length() == 9) {
+			for (int i = 0; i < n; i++) {
+				if(inventario_disponible[i].codigo_libro == stoi(codigo_libro)){
+					return true;
+				}
+				else { return false; }
+			}
+		}
+		else { return false; }
+
+	}
+	else { return false; }
+}
+
+static bool verif_string(string texto) { //Funcion para verificar si es netamente un string sin entrada de digitos
+	for (int i = 0; i < texto.length(); i++) {
+		if (isdigit(texto[i])) { return true; }
+		else { continue; }
+	} return false;
+}
+
+static bool verif_telefono(string telefono) {
+	if (telefono.length() <10 && telefono.length()>1) { // Verificamos numero de telefono evitando los numeros de un string y evitando el caracter +
+		bool verif=false;
+		for (int i = 0; i < 9; i++) {
+			if (isdigit(telefono[i])) { verif = true; }
+			if (isdigit(telefono[i]) == false || telefono[i] == '+') { return false; }
+		}
+		return verif;
+	}
+	else { return false; }
+}
+
+static bool verif_entero(string verificar) { // verificamos si la cadena que ingreso es netamente un numero entero
+	if (verificar.length() == 0) { return false; }
+		bool verif = false;
+		for (int i = 0; i < verificar.length(); i++) {
+			if (isspace(verificar[i]) || !isprint(verificar[i])) { return false; }
+			if (isdigit(verificar[i])) { verif = true; }
+			else { return false; }
+		}
+		return verif;
+}
+
+
+
+/*________________________________________*/
+/*FUNCION DE ESTETICA DEL PROGRAMA*/
+extern void estetica(int tamano = 20, char caracter = '_') { 
+	cout << "\t";
+	for (int i = 0; i < tamano; i++) {
+		cout << caracter;
+	}cout << endl;
+}
+/*____________________________________*/
+
+
 /*____________________________________*/
 
 /*FUNCION COMPLEMENTARIA CAPTURE TIME*/
-extern string capture_time() {
+extern string capture_time() { 
 	string tiempo_capturado;
 	tm tiempo;
 	time_t timestap;
@@ -78,7 +114,10 @@ extern string capture_time() {
 	/*_______________*/
 	tiempo_capturado.append(to_string(tiempo.tm_year + 1900)); tiempo_capturado.append("/");
 	tiempo_capturado.append(to_string(tiempo.tm_mon+1)); tiempo_capturado.append("/");
-	tiempo_capturado.append(to_string(tiempo.tm_mday)); 
+	tiempo_capturado.append(to_string(tiempo.tm_mday)); tiempo_capturado.append("/ | ");
+	tiempo_capturado.append(to_string(tiempo.tm_hour)); tiempo_capturado.append("(H):");;
+	tiempo_capturado.append(to_string(tiempo.tm_min)); tiempo_capturado.append("(M):");
+	tiempo_capturado.append(to_string(tiempo.tm_sec)); tiempo_capturado.append("(S)");
 	return tiempo_capturado;
 }
 /*____________________________________*/
@@ -97,7 +136,7 @@ extern void obtener_informacion_usuario(int id_usuario) {
 		else { cout << RED <<"\t[!]"<<RESET <<ORANGE<<" Ingrese bien su edad!\n"<<RESET; } 
 	}
 	while (true) {
-		cout<< LGREEN << "\t[+]Seleccion de sexo:\n\t->(1)Masculino\n\t->(2)Femenino\n\t->(3)Helicoptero apache\n--> "<< RESET; cin >> ingreso_jugar;
+		cout<< LGREEN << "\t[+]Seleccion de sexo:\n\t->(1)Masculino\n\t->(2)Femenino\n\t->(3)Cabrini\n\t--> "<< RESET; cin >> ingreso_jugar;
 		if (verif_entero(ingreso_jugar)) { break; }
 		else { cout << RED <<"\t[!]" << RESET<< ORANGE <<"Ingrese un valor correcto!\n "<< RESET; }
 	}
@@ -157,4 +196,34 @@ extern void see_data(int contador) {
 		cout << "\t" << usuarios[i].CELULAR<< endl;
 		cout << "\t" << usuarios[i].hora_operacion << endl;
 	}
+}
+/*___________________________________________________________________________________________________________________________________________________________________________*/
+
+
+
+
+extern void obtener_informacion_prestamo(int usuario_id = 0) {
+
+	usuarios[usuario_id].cantidad_libros_prestado++;
+	string var_to_game;
+	while (true) {
+		cout << "\n\t[+]Ingrese su numero de DNI: "; getline(cin, var_to_game);
+		if (verif_dni(var_to_game)) {
+			usuarios[usuario_id].DNI = var_to_game; break;
+		}
+		else { cout << RED << "\t[!]" << RESET << ORANGE << " Ingrese bien su DNI!\n" << RESET; }
+	}
+	cin.ignore();
+	while (true) {
+		cout << "\n\t[+]Ingrese el codigo del libro: "; getline(cin, var_to_game);
+		if (verif_codigo_libro(var_to_game)) {
+			usuarios[usuario_id].libros_devueltos[usuario_id]. = var_to_game;
+			break;
+		}
+		else {
+			cout << RED << "\t[!]" << RESET << ORANGE << " Ingrese de forma valida su codigo!\n" << RESET;
+		}
+
+	}
+
 }
