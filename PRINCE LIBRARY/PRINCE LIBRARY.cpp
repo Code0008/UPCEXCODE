@@ -4,6 +4,8 @@
 #include <conio.h>
 #include "INFO_DE_MENUS.h"
 #include "FUNCIONALIDADES.h"
+#include "funcionalidades_prestamo.h"
+#include "funcionalidades_devolucion.h"
 #include <string>
 //#include "TESTS.h"
 #include "COLORAMA.h"
@@ -13,11 +15,16 @@ int main() {
 	int  id_usuario = 0;
 	string seleccion;
 	menu_login();
+	switch (select())
+	{
+	default:
+		break;
+	}
 	obtener_informacion_usuario(id_usuario);
-	id_usuario++;
+	generar_matris();
 	while (true) {
 		system("cls");
-		menu_principal(); cin.ignore();
+		menu_principal(); cin.ignore(); cout << endl;
 		while (true) {
 			cout << "[+] INGRESE SELECCION: ";
 			getline(cin, seleccion);
@@ -27,20 +34,29 @@ int main() {
 		switch (stoi(seleccion))
 		{
 		case 1:
+			if (verif_sancion()) {
+				menu_de_sancion();
+				break;
+			}
 			system("cls");
 			menu_prestamo();
-			generar_matris();
-			obtener_informacion_prestamo();
+			obtener_informacion_prestamo(id_usuario);
 			boleta_prestamo();
+			break;
+		case 2:
+			menu_devulocion();
+			obtener_informacion_devolucion();
+			boleta_devolucion();
 			break;
 		default:
 			break;
 		}
-
 		if (respuesta_continuar() != true) { break; }
-
 	}
 	system("cls");
 	RESET;
 
+	return 0;
 }
+
+// CODIGO PENDEJO DE PENDEJOS ECHO PARA PENDEJOS
