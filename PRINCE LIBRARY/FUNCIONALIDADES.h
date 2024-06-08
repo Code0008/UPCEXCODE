@@ -16,11 +16,7 @@ using namespace std;
 
 LIBRO* inventario = new LIBRO[100];
 
-LIBRO inventario_disponible[3] = {
-	{202412340, "LIBRO", "EL_QUIJOTE_DE_LA_MANCHA"},
-	{202413830, "REVISTA", "NAT GEO NEW PUBLICATION"},
-	{202412334, "PERIODICO", "ABEJA REPUBLICANA"}
-};
+
 /*___________________________________*/
 /*CRACION DE ARREGLOS DE USUARIOS*/
 USUARIO* usuarios = new USUARIO[100];
@@ -44,22 +40,9 @@ static bool verif_dni(string dni) {
 	else { return false; }
 }
 
-static bool verif_codigo_libro(string codigo_libro) {
-	int n = sizeof(inventario_disponible) / sizeof(inventario_disponible[0]);
-	if (verif_entero(codigo_libro)) {
-		if (codigo_libro.length() == 9) {
-			for (int i = 0; i < n; i++) {
-				if (inventario_disponible[i].codigo_libro == stoi(codigo_libro)) {
-					return true;
-				}
-			}
-		}
-	}
-	return false;
-}
-
 
 static bool verif_string(string texto) { //Funcion para verificar si es netamente un string sin entrada de digitos
+	bool verif= true;
 	for (int i = 0; i < texto.length(); i++) {
 		if (isdigit(texto[i])) { return true; }
 		else { continue; }
@@ -97,7 +80,7 @@ extern void estetica(int tamano = 20, char caracter = '_') {
 	cout << "\t";
 	for (int i = 0; i < tamano; i++) {
 		cout << caracter;
-	}cout << endl;
+	}
 }
 /*____________________________________*/
 
@@ -138,7 +121,9 @@ extern void obtener_informacion_usuario(int id_usuario) {
 	}
 	while (true) {
 		cout << LGREEN << "\t[+]Seleccion de sexo:\n\t->(1)Masculino\n\t->(2)Femenino\n\t->(3)Cabrini\n\t--> " << RESET; cin >> ingreso_jugar;
-		if (verif_entero(ingreso_jugar)) { break; }
+		cout << ingreso_jugar << endl;
+		if (verif_entero(ingreso_jugar)) { if (stoi(ingreso_jugar) == 1 || stoi(ingreso_jugar) == 2 || stoi(ingreso_jugar) == 3) { break; }  cout << RED << "\t[!]" << RESET << ORANGE << "Ingrese un valor correcto!\n " << RESET;
+		}
 		else { cout << RED << "\t[!]" << RESET << ORANGE << "Ingrese un valor correcto!\n " << RESET; }
 	}
 	switch (stoi(ingreso_jugar))
@@ -171,11 +156,14 @@ extern void obtener_informacion_usuario(int id_usuario) {
 extern bool respuesta_continuar() {
 	char respuesta;
 	cout << endl;
+	while (true) {
 	cout << RED; estetica(20, '!'); cout << RESET;
 	cout << LBLUE << "\t[!]desea hacer otra operacion?:<<" << RESET << RED" Y/N " << RESET << endl;
 	cin >> respuesta; respuesta = toupper(respuesta);
-	if (respuesta == 'Y') { return true; }
-	else { return false; }
+	if (respuesta == 'Y' || respuesta == 'N') { break; }else { continue; }
+	}
+	cin.ignore();
+	return respuesta;
 }
 /*_______________________________________*/
 /*FUNCION COMPLEMENTARIA GENERAR CODIGO ALEATORIO*/
@@ -185,109 +173,51 @@ extern int codigo_aleatorio(int inicio, int fin) {
 	gen = inicio + rand() % (fin + 1 - inicio);
 	return gen;
 }
+
+
+extern bool verif_sancion(int usuario_id = 0) {
+	if (usuarios[usuario_id].tiene_sancion == true) {
+		return  true;
+	}
+	else { return false; }
+}
+
+
+extern void append_libro(int usuario_id = 0, string libro = "void") {
+	int indice = 0;
+	for (int i = 0; i < 50; i++) {
+		if (usuarios[usuario_id].libros_tratados[i][3] == "true" && usuarios[usuario_id].libros_tratados[i + 1][3] == "void") {
+			indice = i + 1;
+		}
+	}
+	for (int j = 0; j < 4; j++) {
+		if (j == 0) {
+			usuarios[usuario_id].libros_tratados[indice][j] = libro;
+		}
+		if (j == 1) {
+			usuarios[usuario_id].libros_tratados[indice][j] = capture_time();
+		}
+		if (j == 2) {
+			usuarios[usuario_id].libros_tratados[indice][j] = "P";
+		}
+		if (j == 3) {
+			usuarios[usuario_id].libros_tratados[indice][j] = "true";
+		}
+	}
+}
+
+extern char select() {
+	char seleccion;
+	cin >> seleccion;
+	if (toupper(seleccion) == 'Y') {
+		return seleccion;
+	}
+	else {
+		return 'N';
+	}
+}
+
+
 /*___________________________________________________________________________________________________________________________________________________________________________*/
 
 
-static  string calculo_dia_devolucion() {
-	int end_days[] = { 31, 29, 31, 30, 31, 30 };
-	int n = sizeof(end_days) / sizeof(end_days[0]);
-	int moth_end_day = 0;
-	string tiempo_capturado;
-	tm tiempo;
-	time_t timestap;
-	time(&timestap);
-	localtime_s(&tiempo, &timestap);
-	tiempo_capturado.append(to_string(tiempo.tm_year + 1900)); tiempo_capturado.append("/");
-	for (int i = 0; i < n; i++) {
-		moth_end_day = end_days[tiempo.tm_mon];
-	}
-	if (tiempo.tm_mday > tiempo.tm_mday + 5) {tiempo_capturado.append(to_string(tiempo.tm_mon+2)); tiempo_capturado.append("/");}
-	else {tiempo_capturado.append(to_string(tiempo.tm_mon+1));}
-	tiempo_capturado.append(to_string(tiempo.tm_mday+5)); 
-	return tiempo_capturado;
-}
-
-
-
-
-extern void generar_matris(int usuario_id=0) {
-	for (int i = 0; i < 50; i++) {
-		usuarios[usuario_id].libros_tratados[i] = new string[4];
-	}
-	for (int i = 0; i < 50; i++) {
-		usuarios[usuario_id].libros_tratados[i][3] = "void";
-	}
-}
-
-extern void append_libro(int usuario_id = 0, int fila=0, string libro="void") {
-	for (int j = 0; j < 4; j++) {
-		if (j == 0) {
-			usuarios[usuario_id].libros_tratados[fila][j] = libro;
-		}
-		if (j == 1) {
-			usuarios[usuario_id].libros_tratados[fila][j] = capture_time();
-		}
-		if(j==2){
-			usuarios[usuario_id].libros_tratados[fila][j] = "P";
-		}
-		if (j == 3) {
-			usuarios[usuario_id].libros_tratados[fila][j] = "true";
-		}
-	}
-}
-
-
-extern  void see_matris(int usuario_id = 0) {
-	for (int i = 0; i < 50; i++) {
-		if (usuarios[usuario_id].libros_tratados[i][3] == "true") {
-			for (int j = 0; j < 4; j++) {
-				cout << usuarios[usuario_id].libros_tratados[i][j] << "|";
-			}
-		}
-	}
-}
-
-
-extern void obtener_informacion_prestamo(int usuario_id = 0) {
-	int contador_posicion_libro=0; 
-	string var_to_game;
-	if (usuarios[usuario_id].DNI=="void") {
-		while (true) {
-			cout << "\n\t[+]Ingrese su numero de DNI: "; getline(cin, var_to_game);
-			if (verif_dni(var_to_game)) {
-				usuarios[usuario_id].DNI = var_to_game; break;
-			}
-			else { cout << RED << "\t[!]" << RESET << ORANGE << " Ingrese bien su DNI!\n" << RESET; }
-		}
-	}
-	while (true) {
-		var_to_game = "";
-		cout << "\n\t[+]Ingrese el codigo del libro: "; getline(cin, var_to_game);
-		if (verif_codigo_libro(var_to_game)) {
-			contador_posicion_libro++;
-			break;}
-		else {
-			cout << RED << "\t[!]" << RESET << ORANGE << " Ingrese de forma valida su codigo!\n" << RESET;
-		}
-	}
-	append_libro(usuario_id, contador_posicion_libro, var_to_game);
-	cout << "\t[!] El dia maximo para devolver es: " << calculo_dia_devolucion() << endl;
-}
-
-static void boleta_prestamo(int usuario_id = 0) {
-	estetica(100, '_');
-	cout << "\t" << usuarios[usuario_id].userID << endl;
-	cout << "\t" << usuarios[usuario_id].DNI << endl;
-	cout << "\t" << usuarios[usuario_id].NOMBRE_APELLIDO << endl;
-	cout << "\t" << usuarios[usuario_id].EDAD << endl;
-	cout << "\t" << usuarios[usuario_id].SEXO << endl;
-	cout << "\t" << usuarios[usuario_id].direccion.CASA_DEPARTAMENTO << endl;
-	cout << "\t" << usuarios[usuario_id].direccion.DIRECCION << endl;
-	cout << "\t" << usuarios[usuario_id].direccion.DISTRITO << endl;
-	cout << "\t" << usuarios[usuario_id].direccion.PROVINCIA << endl;
-	cout << "\t" << usuarios[usuario_id].CELULAR << endl;
-	cout << "\t" << usuarios[usuario_id].hora_operacion << endl;
-	estetica(100, '_');
-	see_matris(usuario_id);
-
-}
