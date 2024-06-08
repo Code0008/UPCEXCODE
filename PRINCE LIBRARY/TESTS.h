@@ -95,18 +95,10 @@ int main() {
     if (fecha_actua == x) {
         cout << "Misma fecha";
     }
-    else { cout << "pene"; }
+    else { cout << "traxza"; }
 }
 
 
-
-#include <iostream>
-#include <string>
-#include <stdio.h>
-#include <ctime>
-#include <cmath>
-
-using namespace std;
 
 int** datos = new int* [8];
 
@@ -127,8 +119,8 @@ extern void generar_datos() {
 
 		datos[i][0] = years[i];
 
-		for (int j = 1; j < 12; j++) {
-			datos[i][j] = 4166 + rand() % (5000 + 1 - 4166	); // almacenamos numero de usuarios por mes en las columnas j
+		for (int j = 1; j < 11; j++) {
+			datos[i][j] = 4166 + rand() % (5000 + 1 - 4166); // almacenamos numero de usuarios por mes en las columnas j
 		}
 		indice++;
 	}
@@ -175,7 +167,7 @@ extern void see_first_semes(int year = 2024) {
 	int count_meses = 0;
 	for (int i = 1; i < 11; i++) {
 		cout << meses[count_meses] << "\t";
-		gen_grafico((datos[indice][i]-168) / 100, 254); cout << endl;
+		gen_grafico(datos[indice][i] / 100, 254); cout << endl;
 		count_meses++;
 	}
 }
