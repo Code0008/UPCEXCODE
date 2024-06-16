@@ -19,12 +19,11 @@ struct direccion {
 struct Usuarios {
     string nombre_usuario;
     int edad_usuario;
-    int DNI;
+    int DNI=0;
     char sexo;
     direccion direccion_usuario;
     string celular;
-
-    
+    bool sancion=false;
 };
 
 struct contenido {
@@ -35,22 +34,32 @@ struct contenido {
 };
 
 
+void see_info_tratada(string** tratado) {
+    for (int i = 0; i < 100; i++) {
+        for (int j = 0; j < 4; j++) {
+            if (tratado[i][3] == "true") {
+                cout << "\t";
+                cout << tratado[i][j];
+            }
+        }
+    }
+}
 bool verificar_codigo(contenido inventario[], string codigo) {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < 5; i++) {
         if (stoi(codigo) == inventario[i].codigo_libro) {
             inventario[i].prestado = true;
             return  true;
+            break;
         }
     }
     return false;
 }
 
 void mirar_informacion_inventario(contenido inventario[], Usuarios * usuarios, int posicion) {
-
-    for (int i = 0; i < 4; i++) {
+    cout << "\tCODIGO\ttitulo" << endl;
+    for (int i = 0; i < 4; i++){
         if (inventario[i].prestado == false) {
-            cout << inventario[i].codigo_libro << setw(5);
-            cout << inventario[i].titulo_libro << endl;
+            cout << "\t" << inventario[i].codigo_libro << "\t" << inventario[i].titulo_libro << endl;
         }
     }
 }
@@ -63,22 +72,13 @@ void agregar_libro(string ** data_usuario, string codigo, string fecha_devlucion
             break;
         }
     }
-    for (int i = 0; i < 100; i++) {
-        for (int j = 0; j < 4; j++) {
-            switch (j)
-            {
-            case 0:
-                data_usuario[i][0] = codigo;
-                break;
-            case 1:
-                data_usuario[i][1] = "prestamo";
-                break;
-            case 3:
-                data_usuario[i][2] =
-            default:
-                break;
-            }
-        }
+    for (int j = 0; j < 4; j++) {
+        switch (j){
+        case 0: data_usuario[indice][0] = codigo; break;
+        case 1:data_usuario[indice][1] = "prestamo"; break;
+        case 2:data_usuario[indice][2] = fecha_devlucion;break;
+        case 3: data_usuario[indice][3] = "true"; break;
+        default:break; }
     }
 }
 
@@ -88,9 +88,7 @@ void get_prestamo_data(contenido inventario[], Usuarios* usuarios, int posicion,
     while (true) {
         cout << "[!] Ingrese su DNI: " << endl;
         getline(cin, dni);
-        if (dni.length() == 8) {
-            break;
-        }
+        if (dni.length() == 8) {  break;}
         else { continue; }
     }
     usuarios[posicion].DNI = stoi(dni);
@@ -99,30 +97,33 @@ void get_prestamo_data(contenido inventario[], Usuarios* usuarios, int posicion,
     while (true)
     {
         string codigo;
-        getline(cin, codigo); cin.ignore();
+        getline(cin, codigo); 
         if (verificar_codigo(inventario, codigo)) {
+            agregar_libro(data_usuario, codigo, "hoy ");
             break;
         }
     }
+    cout << "\t INVENTARIO ACTUAL DE LA BIBLIOTECA" << endl;
     mirar_informacion_inventario(inventario, usuarios, posicion);
-
-    
+    cout << "\t INVENTARIO ACTUAL DEL USUARIO" << endl;
+    see_info_tratada(data_usuario);
+    cout << endl;
 }
 
 
 void get_user_data(Usuarios* usuarios, int posicion) {
-    cout << "Ingrese el nombre de usuario: " << endl;
+    cout << "\tIngrese el nombre de usuario: " << endl;
     getline(cin, usuarios[posicion].nombre_usuario);
-    cout << "Ingrese la edad del usuario: " << endl;
+    cout << "\tIngrese la edad del usuario: " << endl;
     cin >> usuarios[posicion].edad_usuario;
-    cout << "Ingrese su sexo: " << endl;
+    cout << "\tIngrese su sexo: " << endl;
     cin >> usuarios[posicion].sexo;
-    cout << "Ingrese su direccion: " << endl;
     cin.ignore();
+    cout << "\tIngrese su direccion: " << endl;
     getline(cin,usuarios[posicion].direccion_usuario.direccion_exacta);
-    cout << "Ingrese su distrito: " << endl;
-    getline(cin, usuarios[posicion].direccion_usuario.distrito); cin.ignore();
-    cout << "Ingrese su celular: " << endl;
+    cout << "\tIngrese su distrito: " << endl;
+    getline(cin, usuarios[posicion].direccion_usuario.distrito); 
+    cout << "\tIngrese su celular: " << endl;
     getline(cin, usuarios[posicion].celular); 
 }
 
@@ -154,13 +155,37 @@ void make_matriz(string  **  matriz) {
     */
 }
 
+void get_devolucion_data(string** infotratada, Usuarios* usuarios, int posicion ) {
+    if (usuarios[posicion].DNI==0) {
+        string dni;
+        while (true) {
+            cout << "[!] Ingrese su DNI: " << endl;
+            getline(cin, dni);
+            if (dni.length() == 8) {
+                break;
+            }
+            else { continue; }
+        }
+        usuarios[posicion].DNI = stoi(dni);
+    }
+    string codigo;
+    while (true) {
+        cout << "\nINGRESE EL CODIGO DEL LIBRO: ";
+        getline(cin, codigo);
+        if (codigo.length() == 5) {
+            break;
+        }
+        else { continue; }
+    }
+   
+}
 
 int main()
 {
     contenido inventario[4]{
     {202412, "Eltinling", false, 'R'},
-    {202411, "Ananim", true, 'R'},
-    {202416, "Perukistano", true, 'R'},
+    {202411, "Ananim", false, 'R'},
+    {202416, "Perukistano", false, 'R'},
     {202415, "Pivano", false, 'R'},
     };
     Usuarios* usuarios = new Usuarios[100];
@@ -171,13 +196,20 @@ int main()
     char selec;
     while (true) {
         get_user_data(usuarios, posicion);
-        
+        cout << "\t [A] Prestamo" << endl;
+        cout << "\t [B] Devolucion" << endl;
         cout << "Ingrese procesoa ejecutar:"; cin >> selec;
-
         switch (selec)
         {
         case 'A': 
+            cin.ignore();
             get_prestamo_data(inventario, usuarios, posicion, informacion_tratada);
+            break;
+        case 'B': 
+            if (usuarios[posicion].sancion != true) {
+                get_devolucion_data(informacion_tratada, usuarios, posicion);
+            }
+            else { break; }
             break;
         default:
             break;
@@ -188,7 +220,3 @@ int main()
     }
 
 }
-
-
-
-
